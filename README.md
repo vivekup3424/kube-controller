@@ -55,7 +55,7 @@ Once the controller is deployed, it will start monitoring the CPU and Memory usa
 To remove the Kubernetes Resource Monitor Controller and all associated resources, run:
 
 ```bash
-kubectl delete -f controller.yaml
+kubectl delete -f resources/controller.yaml
 ```
 
 ## Contributing
