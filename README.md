@@ -8,6 +8,7 @@ The **Kubernetes Resource Monitor Controller** is a custom Kubernetes controller
 - Aggregates usage metrics based on namespaces.
 - Exposes metrics through a `/metrics` endpoint for kubernetes controller.
 - Provides an API route for accessing aggregated usage data.
+- Implemented **Concurrency using Go routines** to improve performance and efficiency. By leveraging Go routines, the controller can handle multiple monitoring tasks concurrently, leading to faster data collection and processing.
 
 ## Getting Started
 
