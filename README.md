@@ -32,13 +32,13 @@ These instructions will help you get the Kubernetes Resource Monitor Controller 
 2. Build the Docker container:
 
    ```bash
-   docker build -t k8s-resource-monitor-controller .
+   docker build -t kube-controller:v1 .
    ```
 
 3. Deploy the controller to your Kubernetes cluster:
 
    ```bash
-   kubectl apply -f deployment.yaml
+   kubectl apply -f resources/controller.yaml
    ```
 
 ### Usage
@@ -55,7 +55,7 @@ Once the controller is deployed, it will start monitoring the CPU and Memory usa
 To remove the Kubernetes Resource Monitor Controller and all associated resources, run:
 
 ```bash
-kubectl delete -f deployment.yaml
+kubectl delete -f controller.yaml
 ```
 
 ## Contributing
