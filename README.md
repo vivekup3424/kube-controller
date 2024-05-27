@@ -28,6 +28,47 @@ K --> L[getNamespaceMetrics()]
 L --> M[Fetch Deployments]
 L --> N[Fetch Pod Metrics]
 L --> O[Aggregate Container Metrics]
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant main.go
+    participant StartController
+    participant HTTP Server
+    participant Cron Job
+    participant Informer
+    participant Event Handlers
+    participant Compute
+    participant getNamespaceMetrics
+
+    User->>HTTP Server: Send request to /metrics
+    HTTP Server->>Compute: Call Compute()
+    Compute->>getNamespaceMetrics: Call getNamespaceMetrics()
+    getNamespaceMetrics->>Compute: Return aggregated metrics
+    Compute->>HTTP Server: Return metrics
+    HTTP Server->>User: Send metrics response
+
+    User->>HTTP Server: Send request to /update
+    HTTP Server->>Compute: Call Compute()
+    Compute->>getNamespaceMetrics: Call getNamespaceMetrics()
+    getNamespaceMetrics->>Compute: Return aggregated metrics
+    Compute->>HTTP Server: Acknowledge update
+    HTTP Server->>User: Send update confirmation
+
+    main.go->>StartController: Call StartController()
+    StartController->>Informer: Initialize Informer
+    StartController->>Event Handlers: Add event handlers
+
+    Event Handlers->>Compute: On deployment add/update/delete
+    Compute->>getNamespaceMetrics: Call getNamespaceMetrics()
+    getNamespaceMetrics->>Compute: Return aggregated metrics
+
+    Cron Job->>Compute: Periodically call Compute()
+    Compute->>getNamespaceMetrics: Call getNamespaceMetrics()
+    getNamespaceMetrics->>Compute: Return aggregated metrics
+
+```
+
 ## Getting Started
 
 These instructions will help you get the Kubernetes Resource Monitor Controller up and running on your Kubernetes cluster.
