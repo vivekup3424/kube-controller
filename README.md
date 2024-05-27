@@ -10,66 +10,24 @@ The **Kubernetes Resource Monitor Controller** is a custom Kubernetes controller
 - Provides an API route for accessing aggregated usage data.
 - Implemented **Concurrency using Go routines** to improve performance and efficiency. By leveraging Go routines, the controller can handle multiple monitoring tasks concurrently, leading to faster data collection and processing.
 ## Working
-+---------------------------+
-|        main.go            |
-|---------------------------|
-| - Initializes Clientsets  |
-| - Starts HTTP Server      |
-| - Starts Controller       |
-| - Sets up Cron Job        |
-+-----+---------------------+
-      |
-      v
-+----------------------------------+
-|       StartController()          |
-|----------------------------------|
-| - Sets up Informer               |
-| - Handles Deployment Events      |
-| - Calls handleDeploymentChange() |
-+-----+----------------------------+
-      |                  |
-      v                  |
-+----------------------------------+  |
-| handleDeploymentChange()         |  |
-|----------------------------------|  |
-| - Calls Compute()                |  |
-| - Logs Errors                    |  |
-+-----+----------------------------+  |
-      |                              |
-      v                              v
-+----------------------------------+  |
-|       Compute()                  |  |
-|----------------------------------|  |
-| - Iterates through Namespaces    |  |
-| - Calls getNamespaceMetrics()    |  |
-| - Aggregates Metrics             |  |
-+-----+----------------------------+  |
-      |                              |
-      v                              |
-+----------------------------------+  |
-| getNamespaceMetrics()            |  |
-|----------------------------------|  |
-| - Fetches Deployments            |  |
-| - Collects Pod Metrics           |  |
-| - Aggregates CPU and Memory Usage|  |
-+----------------------------------+  |
-      |                              |
-      v                              |
-+----------------------------------+  |
-|      HTTP Server                 |  |
-|----------------------------------|  |
-| - /metrics Endpoint              |  |
-| - /update Endpoint               |  |
-+----------------------------------+  |
-      |                              |
-      v                              |
-+----------------------------------+  |
-|       Cron Job                   |  |
-|----------------------------------|  |
-| - Triggers UpdateMetrics()       |  |
-| - Calls Compute()                |  |
-+----------------------------------+--+
-
+```mermaid
+graph LR
+A[main.go] -- k8S controller --> B(StartContoller)
+A ---TLS-Listnener --> C[HTTP Server]
+A -- cron is started automatically from /etc/init.d on entering multi-user runlevels. --> D[Cron Job]
+```
+C -- handles GET-requests. --> E[/metrics Endpoint]
+C -- handles P --> F[/update Endpoint]
+B --> G[Informer]
+B --> H[Event Handlers]
+D --> I[UpdateMetrics()]
+H --> J[handleDeploymentChange()] handles GET-requests --> E[/metrics Endpoint]
+I --> K[Compute()]
+J --> K[Compute()]
+K --> L[getNamespaceMetrics()]
+L --> M[Fetch Deployments]
+L --> N[Fetch Pod Metrics]
+L --> O[Aggregate Container Metrics]
 ## Getting Started
 
 These instructions will help you get the Kubernetes Resource Monitor Controller up and running on your Kubernetes cluster.
