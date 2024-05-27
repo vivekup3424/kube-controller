@@ -9,6 +9,66 @@ The **Kubernetes Resource Monitor Controller** is a custom Kubernetes controller
 - Exposes metrics through a `/metrics` endpoint for kubernetes controller.
 - Provides an API route for accessing aggregated usage data.
 - Implemented **Concurrency using Go routines** to improve performance and efficiency. By leveraging Go routines, the controller can handle multiple monitoring tasks concurrently, leading to faster data collection and processing.
+## Working
++---------------------------+
+|        main.go            |
+|---------------------------|
+| - Initializes Clientsets  |
+| - Starts HTTP Server      |
+| - Starts Controller       |
+| - Sets up Cron Job        |
++-----+---------------------+
+      |
+      v
++----------------------------------+
+|       StartController()          |
+|----------------------------------|
+| - Sets up Informer               |
+| - Handles Deployment Events      |
+| - Calls handleDeploymentChange() |
++-----+----------------------------+
+      |                  |
+      v                  |
++----------------------------------+  |
+| handleDeploymentChange()         |  |
+|----------------------------------|  |
+| - Calls Compute()                |  |
+| - Logs Errors                    |  |
++-----+----------------------------+  |
+      |                              |
+      v                              v
++----------------------------------+  |
+|       Compute()                  |  |
+|----------------------------------|  |
+| - Iterates through Namespaces    |  |
+| - Calls getNamespaceMetrics()    |  |
+| - Aggregates Metrics             |  |
++-----+----------------------------+  |
+      |                              |
+      v                              |
++----------------------------------+  |
+| getNamespaceMetrics()            |  |
+|----------------------------------|  |
+| - Fetches Deployments            |  |
+| - Collects Pod Metrics           |  |
+| - Aggregates CPU and Memory Usage|  |
++----------------------------------+  |
+      |                              |
+      v                              |
++----------------------------------+  |
+|      HTTP Server                 |  |
+|----------------------------------|  |
+| - /metrics Endpoint              |  |
+| - /update Endpoint               |  |
++----------------------------------+  |
+      |                              |
+      v                              |
++----------------------------------+  |
+|       Cron Job                   |  |
+|----------------------------------|  |
+| - Triggers UpdateMetrics()       |  |
+| - Calls Compute()                |  |
++----------------------------------+--+
 
 ## Getting Started
 
