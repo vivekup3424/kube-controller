@@ -16,19 +16,6 @@ A[main.go] -- k8S controller --> B(StartContoller)
 A ---TLS-Listnener --> C[HTTP Server]
 A -- cron is started automatically from /etc/init.d on entering multi-user runlevels. --> D[Cron Job]
 ```
-C -- handles GET-requests. --> E[/metrics Endpoint]
-C -- handles P --> F[/update Endpoint]
-B --> G[Informer]
-B --> H[Event Handlers]
-D --> I[UpdateMetrics()]
-H --> J[handleDeploymentChange()] handles GET-requests --> E[/metrics Endpoint]
-I --> K[Compute()]
-J --> K[Compute()]
-K --> L[getNamespaceMetrics()]
-L --> M[Fetch Deployments]
-L --> N[Fetch Pod Metrics]
-L --> O[Aggregate Container Metrics]
-
 ```mermaid
 sequenceDiagram
     participant User
