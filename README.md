@@ -60,4 +60,4 @@ kubectl delete -f resources/controller.yaml
 
 ## Contributing
 
-Contributions are welcome! Please fork the repository and submit a pull request.
+Contributions are welcome! Please fork the repository and submit a pull request. Adding some new stuffs here.
